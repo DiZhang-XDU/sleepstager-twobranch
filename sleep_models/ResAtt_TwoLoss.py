@@ -2,7 +2,6 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-# interface = {'cm':[], 'tm':[]}
 class ChannelMask(nn.Module):
     def __init__(self, input_channels, ratio=8):
         super(ChannelMask, self).__init__()
@@ -28,7 +27,6 @@ class TemporalMask(nn.Module):
     
     def forward(self, x):
         max_out, _ = torch.max(x, dim=1, keepdim=True)
-        # interface['tm'].append(max_out[2,:,:].view(-1).cpu())######################################
         out = torch.sigmoid(max_out) + 1
         return out
 
@@ -122,7 +120,6 @@ class Stage_Net_E2E(nn.Module):
         # self.criterion2 = nn.CrossEntropyLoss(weight = torch.FloatTensor([1/288, 1/37, 1/409, 1/126, 1/139, 0]))# default
         self.criterion2 = nn.CrossEntropyLoss(weight = torch.FloatTensor([166722/166722, 166722/20433, 166722/237319, 166722/74527, 166722/81947, 0]))#SHHS1 valid
         # self.criterion2 = nn.CrossEntropyLoss(weight = torch.FloatTensor([1/0.38, 1/0.037, 1/0.363, 1/0.097, 1/0.122, 0]))# all cohorts valid
-        # self.criterion2 = nn.CrossEntropyLoss(weight = torch.FloatTensor([1, 2.2, 1, 1.3, 1.4, 0]))# all cohorts valid
 
         self.gap = nn.AdaptiveAvgPool1d(1)
 
@@ -143,15 +140,15 @@ class Stage_Net_E2E(nn.Module):
         x_seq = x_seq.permute(0,2,1)
 
         # CNN
-        pred_seq = self.net(x_seq)              # [bs * 5, 256, 113]
+        pred_seq = self.net(x_seq)            
         pred_seq = self.bn1(pred_seq)
-        pred_seq = torch.relu(pred_seq)         # [bs, 512]
+        pred_seq = torch.relu(pred_seq)       
         pred_seq = self.gap(pred_seq)
 
-        x1 = pred_seq[mid_mask]                     # [bs, 512, 1]
-        x2 = pred_seq.detach()                      # [bs*5, 512, 1]这里detach?
-        x2 = x2.view([bs, seq_len, 256, -1])        # [bs, 5, 512, 1]
-        x2 = x2.permute([0,2,1,3]).contiguous().view([bs, 256, -1]) # [bs, 256, 5]
+        x1 = pred_seq[mid_mask]                    
+        x2 = pred_seq.detach()                      
+        x2 = x2.view([bs, seq_len, 256, -1])       
+        x2 = x2.permute([0,2,1,3]).contiguous().view([bs, 256, -1]) 
 
         # Loss 1
         x1 = x1.view(bs, -1)
