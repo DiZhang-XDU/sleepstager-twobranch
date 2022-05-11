@@ -60,8 +60,6 @@ class BlockV2(nn.Module):
         out = cm * out
         tm = self.seq(out)
         out = tm * out
-        # interface['cm'].append(cm[2,:,:].view(-1).cpu())######################################################
-        # interface['tm'].append(tm[2,:,:].view(-1).cpu())######################################################
         out += residual 
 
         return out
@@ -164,7 +162,6 @@ class Stage_Net_E2E(nn.Module):
         x2 = self.drop2(x2)
         x2 = self.fc2_2(x2)
         loss2 = self.criterion2(x2, target)
-        # self.interface = interface##################################################
 
         return x1, x2, loss1, loss2
 
