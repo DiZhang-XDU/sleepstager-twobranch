@@ -1,0 +1,34 @@
+# server: RTX4000 * 4
+# basic
+net: "ResAttNet"
+dataset: ["SHHS1", "SHHS2", "CCSHS", "SOF", "CFS", "MROS1", "MROS2"]
+freq: 125
+CUDA_VISIBLE_DEVICES: "0,1,2,3"
+
+# paths
+path: 
+  weights: "./weights_all_robust"
+  tblogs: "./logs_all_robust"
+  log: "./history/log_all_robust.txt"
+redir_root: false
+redir_cache: false
+
+# training utils
+resume: false
+resume_ckp: "./weights/checkpoint_"
+train_parallel: true
+train_thread: 14
+# test utils
+eval_parallel: true
+eval_thread: 12
+
+# training params
+EPOCH_MAX: 20
+EPOCH_STEP: 7000
+BATCH_SIZE: 200
+LR: 0.001
+scheduler: "torch.optim.lr_scheduler.MultiStepLR(optim, [14], .1)" 
+# test params
+tvt: "all"
+test_dataset: ["SHHS1", "SHHS2", "CCSHS", "SOF", "CFS", "MROS1", "MROS2"]
+best_ckp: "./weights_all/epoch_21_val_loss=0.324118_acc=0.8900"

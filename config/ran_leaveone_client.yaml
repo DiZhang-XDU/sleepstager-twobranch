@@ -1,0 +1,35 @@
+# server: RTX4000 * 4
+# basic
+net: "ResAttNet"
+#dataset: ["SHHS1", "SHHS2", "CCSHS", "SOF", "CFS", "MROS1", "MROS2"]
+dataset: ["SHHS1", "SHHS2", "CCSHS", "SOF", "CFS", "MROS2"]
+freq: 125
+CUDA_VISIBLE_DEVICES: "0, 1"
+
+# paths
+path: 
+  weights: "./weights_leave_mros1"
+  tblogs: "./logs_leave_mros1"
+  log: "./history/log_leave_mros1.txt"
+redir_root: ["G:/data/filtered_data/subjects", "G:/data/filtered_data/subjects"]
+redir_cache: "G:/workspace_tmp"
+
+# training utils
+resume: false
+resume_ckp: "./weights/checkpoint_"
+train_parallel: true
+train_thread: 10
+# test utils
+eval_parallel: true
+eval_thread: 10
+
+# training params
+EPOCH_MAX: 20
+EPOCH_STEP: 7000
+BATCH_SIZE: 200
+LR: 0.001
+scheduler: "torch.optim.lr_scheduler.MultiStepLR(optim, [14], .1)" 
+# test params (tvt = test or all)
+tvt: "all"
+test_dataset: "MROS1"
+best_ckp: "weights_leave_mros1/epoch_14_val_loss=0.331385_acc=0.8862"

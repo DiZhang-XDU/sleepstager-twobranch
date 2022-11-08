@@ -1,0 +1,33 @@
+# client: GTX1080TI * 2
+# basic
+net: "ResAttNet"
+dataset: "SHHS1"
+freq: 125
+CUDA_VISIBLE_DEVICES: "0, 1"
+
+# paths
+path: 
+  weights: "./weights_client"
+  tblogs: "./logs/client"
+  log: "./history/log_client.txt"
+redir_root: ["H:/data/filtered_data/subjects"]
+redir_cache: "H:/workspace_tmp"
+
+# training utils
+resume: false
+resume_ckp: "./weights/checkpoint_"
+train_parallel: true
+train_thread: 8
+# test utils
+eval_parallel: true
+eval_thread: 6
+
+# training params
+EPOCH_MAX: 40
+EPOCH_STEP: 3500
+BATCH_SIZE: 200
+LR: 0.001
+scheduler: "torch.optim.lr_scheduler.MultiStepLR(optim, [28], .1)" 
+# test params
+tvt: "test"
+best_ckp: "weights_client/epoch_31_val_loss=0.353225_acc=0.8820"
